@@ -21,7 +21,13 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
-
+f = open("books.csv")
+reader = csv.reader(f)
+for isbn, title, author, year in reader:
+    db.execute("INSERT INTO books (isbn, title, author, year) VALUES (:isbn, :title, :author, :year)",
+                {"isbn": isbn, "title": title, "author": author, "year": year})
+    print(f"Added book {title}, {author}, {year} with ISBN = {isbn}")
+db.commit()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
