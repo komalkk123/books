@@ -24,6 +24,7 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 f = open("books.csv")
 reader = csv.reader(f)
+db.execute("CREATE TABLE IF NOT EXISTS books(isbn int(13) PRIMARY KEY, title varchar(255), author varchar(255), year int(4));")
 for isbn, title, author, year in reader:
     db.execute("INSERT INTO books (isbn, title, author, year) VALUES (:isbn, :title, :author, :year)",
                 {"isbn": isbn, "title": title, "author": author, "year": year})
